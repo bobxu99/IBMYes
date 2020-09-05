@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ master ]
   schedule:
-    - cron: '0 12 * * FRI'
+    - cron: '0 0 * * *'
 
 jobs:
   ibm-cloud-restart:
@@ -22,12 +22,17 @@ jobs:
       env:
         IBM_ACCOUNT: ${{ secrets.IBM_ACCOUNT }}
         REGION_NUM: ${{ secrets.REGION_NUM }}
+        IBM_PASSWORD: ${{ secrets.IBM_PASSWORD }}
       run: |
         ./IBM_Cloud_CLI/ibmcloud login <<EOF
         $IBM_ACCOUNT
         $REGION_NUM
+        $IBM_PASSWORD
         no
         EOF
+    - name: Get IBM Cloud Apps
+      run: |
+        cf a
     - name: Target IBM Cloud
       env:
         RESOURSE_ID: ${{ secrets.RESOURSE_ID }}
